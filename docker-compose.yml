@@ -3,9 +3,10 @@ version: '3.9'
 services:
   backend:
     build:
-      context: ./recruitment_task_api
+      context: .
       dockerfile: Dockerfile
     volumes:
+      - ./recruitment_task_api:/recruitment_task_api
       - static-data:/vol/web
     ports:
       - "8000:8000"

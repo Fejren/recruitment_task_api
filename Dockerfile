@@ -8,8 +8,9 @@ RUN apk add --update --no-cache --virtual .tmp-build-deps \
     gcc libc-dev libffi-dev linux-headers postgresql-dev \
     musl-dev zlib zlib-dev
 
-WORKDIR /
-COPY . .
+RUN mkdir /recruitment_task_api
+WORKDIR /recruitment_task_api
+COPY ./recruitment_task_api /recruitment_task_api
 
 RUN pip install -r requirements.txt --no-cache-dir
 
