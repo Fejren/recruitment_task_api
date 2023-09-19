@@ -37,27 +37,37 @@ class UserManager(BaseUserManager):
         return user
 
 
+# Account tier model
+class AccountTier(models.Model):
+    name = models.CharField(max_length=100)
+    size = models.IntegerField()  # Custom size of thumbnail height
+    has_original = models.BooleanField(
+        default=False,
+        verbose_name="has access to original image"
+    )
+    has_expiring_link = models.BooleanField(
+        default=False,
+        verbose_name="has the ability to create expiring links"
+    )
+
+    def __str__(self):
+        return self.name
+
+
 # Custom user model
 class User(AbstractBaseUser, PermissionsMixin):
-    ACCOUNT_TIERS = [
-        ('basic', 'Basic'),
-        ('premium', 'Premium'),
-        ('enterprise', 'Enterprise'),
-    ]
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
         editable=False
     )
-    email = models.EmailField(max_length=255, unique=True,
-                              db_index=True)
+    email = models.EmailField(
+        max_length=255,
+        unique=True,
+        db_index=True
+    )
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    account_tier = models.CharField(
-        max_length=10,
-        choices=ACCOUNT_TIERS,
-        default='basic'
-    )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
@@ -71,3 +81,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+# User profile model
+class UserProfile(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE
+    )
+    account_tier = models.ForeignKey(
+        AccountTier,
+        on_delete=models.SET_NULL,
+        null=True
+    )
