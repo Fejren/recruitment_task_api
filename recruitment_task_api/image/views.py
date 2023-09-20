@@ -23,11 +23,11 @@ def process_image(image_file, account_tier: AccountTier, user_id: int) -> None:
     for i in images:
         # Convert PIL.Image to bytes
         image_bytes = BytesIO()
-        i.save(image_bytes, format='JPEG')  # You can choose the desired format
+        i.save(image_bytes, format=img.format)
         image_bytes.seek(0)
 
         # Create SimpleUploadedFile
-        file_name = f"{user_id}_resized_{account_tier.size}.jpg"
+        file_name = f"{user_id}_resized_{account_tier.size}.{img.format}"
         resized_image = SimpleUploadedFile(file_name, image_bytes.read())
         Image.objects.create(content=resized_image, user_id=user_id)
 
@@ -44,14 +44,23 @@ class ImageCreateAndRetrieveViewSet(mixins.CreateModelMixin,
             image = serializer.validated_data['content']
             user = User.objects.get(email=serializer.validated_data['user'])
             account_tier = user.userprofile.account_tier
-            if account_tier is None:
-                return Response({'message': 'Account tier not found'}, status=status.HTTP_400_BAD_REQUEST)
+            if account_tier is None:  # If user profile does not contain account tier
+                return Response(
+                    {'message': 'Account tier not found'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
             else:
-                if account_tier.size is None:
-                    return Response({'message': 'Your account tier has no size'}, status=status.HTTP_400_BAD_REQUEST)
+                if account_tier.size is None:  # If account tier does not contain info about image size
+                    return Response(
+                        {'message': 'Your account tier has no size'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
             saved_image = Image.objects.create(content=image, user_id=user.id)
             process_image(saved_image, account_tier, user.id)
 
-            return Response({'message': 'Obraz przetworzony pomyślnie'}, status=status.HTTP_201_CREATED)
+            return Response(
+                {'message': 'Obraz przetworzony pomyślnie'},
+                status=status.HTTP_201_CREATED
+            )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
