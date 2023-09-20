@@ -1,35 +1,10 @@
-from io import BytesIO
-
-from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
 
+from .processing import process_image
 from .serializers import ImageSerializer
 from .models import Image
-from PIL import Image as ProcessImage
-from user.models import User, AccountTier
-
-
-def process_image(image_file, account_tier: AccountTier, user_id: int) -> None:
-    img = ProcessImage.open(image_file.content)
-    images = []
-    for size in account_tier.size:
-        proportion = size / float(img.size[1])
-        width = int(float(img.size[0]) * proportion)
-        img_resized = img.resize((width, size))
-        images.append(img_resized)
-
-    # Create Image objects for the resized images
-    for i in images:
-        # Convert PIL.Image to bytes
-        image_bytes = BytesIO()
-        i.save(image_bytes, format=img.format)
-        image_bytes.seek(0)
-
-        # Create SimpleUploadedFile
-        file_name = f"{user_id}_resized_{account_tier.size}.{img.format}"
-        resized_image = SimpleUploadedFile(file_name, image_bytes.read())
-        Image.objects.create(content=resized_image, user_id=user_id)
+from user.models import User
 
 
 class ImageCreateAndRetrieveViewSet(mixins.CreateModelMixin,
@@ -55,11 +30,13 @@ class ImageCreateAndRetrieveViewSet(mixins.CreateModelMixin,
                         {'message': 'Your account tier has no size'},
                         status=status.HTTP_400_BAD_REQUEST
                     )
-            saved_image = Image.objects.create(content=image, user_id=user.id)
-            process_image(saved_image, account_tier, user.id)
+            file_names = process_image(image, account_tier, user.id)
 
             return Response(
-                {'message': 'Obraz przetworzony pomyślnie'},
+                {
+                    'message': 'The image has been saved to the database',
+                    'links': file_names,
+                },
                 status=status.HTTP_201_CREATED
             )
         else:
