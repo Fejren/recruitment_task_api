@@ -97,4 +97,6 @@ class UserProfile(models.Model):
     )
 
     def __str__(self):
-        return f'{self.user.email} profile with {self.account_tier.name.upper()} tier'
+        if self.account_tier is not None:
+            return f'{self.user.email} profile with {self.account_tier.name.upper()} tier'
+        return f'{self.user.email} profile with no account tier'
