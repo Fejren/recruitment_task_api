@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
@@ -39,8 +40,8 @@ class UserManager(BaseUserManager):
 
 # Account tier model
 class AccountTier(models.Model):
-    name = models.CharField(max_length=100)
-    size = models.IntegerField()  # Custom size of thumbnail height
+    name = models.CharField(max_length=100, unique=True)
+    size = ArrayField(models.IntegerField())  # Custom size of thumbnail height
     has_original = models.BooleanField(
         default=False,
         verbose_name="has access to original image"
@@ -94,3 +95,8 @@ class UserProfile(models.Model):
         on_delete=models.SET_NULL,
         null=True
     )
+
+    def __str__(self):
+        if self.account_tier is not None:
+            return f'{self.user.email} profile with {self.account_tier.name.upper()} tier'
+        return f'{self.user.email} profile with no account tier'
