@@ -18,18 +18,18 @@ class ImageCreateAndRetrieveViewSet(mixins.CreateModelMixin,
         if serializer.is_valid():
             image = serializer.validated_data['content']
             user = User.objects.get(email=serializer.validated_data['user'])
-            account_tier = user.userprofile.account_tier
-            if account_tier is None:  # If user profile does not contain account tier
+            try:
+                account_tier = user.userprofile.account_tier
+            except Exception as e:
                 return Response(
                     {'message': 'Account tier not found'},
+                    status.HTTP_400_BAD_REQUEST
+                )
+            if account_tier.size is None:  # If account tier does not contain info about image size
+                return Response(
+                    {'message': 'Your account tier has no size'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            else:
-                if account_tier.size is None:  # If account tier does not contain info about image size
-                    return Response(
-                        {'message': 'Your account tier has no size'},
-                        status=status.HTTP_400_BAD_REQUEST
-                    )
             file_names = process_image(image, account_tier, user.id)
 
             return Response(
