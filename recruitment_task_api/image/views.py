@@ -31,7 +31,6 @@ class ImageCreateAndRetrieveViewSet(mixins.CreateModelMixin,
                     status=status.HTTP_400_BAD_REQUEST
                 )
             file_names = process_image(image, account_tier, user.id)
-
             return Response(
                 {
                     'message': 'The image has been saved to the database',

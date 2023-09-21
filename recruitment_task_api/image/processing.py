@@ -24,9 +24,9 @@ def process_image(image, account_tier: AccountTier, user_id: int):
         images.append(img_resized)
 
     # Create Image objects for the resized images
-    file_names = []
+    image_urls = []
     if account_tier.has_original is True:
-        file_names.append(saved_image.content.name)
+        image_urls.append(saved_image.get_url())
     for i in images:
         # Convert PIL.Image to bytes
         image_bytes = BytesIO()
@@ -34,7 +34,7 @@ def process_image(image, account_tier: AccountTier, user_id: int):
         image_bytes.seek(0)
 
         # Create SimpleUploadedFile
-        file_name = f"{user_id}_resized_{account_tier.size}.{img.format}"
+        file_name = f"{user_id}_resized_{account_tier.size[images.index(i)]}.{img.format}"
         resized_image = SimpleUploadedFile(file_name, image_bytes.read())
-        file_names.append(Image.objects.create(content=resized_image, user_id=user_id).content.name)
-    return file_names
+        image_urls.append(Image.objects.create(content=resized_image, user_id=user_id).get_url())
+    return image_urls

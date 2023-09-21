@@ -15,3 +15,8 @@ class Image(models.Model):
 
     def __str__(self):
         return f'Author: {self.user.email} ImageId: {self.id}'
+
+    def get_url(self) -> str:
+        # Get image url
+        file_name = self.content.name
+        return f'http://localhost:8000/{file_name}'
