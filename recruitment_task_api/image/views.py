@@ -1,15 +1,16 @@
 from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
 
-from .processing import process_image, generate_expiring_link
+from link.generate_expiring_link import generate_expiring_link
+from .processing import process_image
 from .serializers import ImageSerializer
 from .models import Image
 from user.models import User
 
 
-class ImageCreateAndRetrieveViewSet(mixins.CreateModelMixin,
-                                    mixins.RetrieveModelMixin,
-                                    viewsets.GenericViewSet):
+class ImageCreateViewSet(mixins.CreateModelMixin,
+                         mixins.RetrieveModelMixin,
+                         viewsets.GenericViewSet):
     queryset = Image.objects.none()
     serializer_class = ImageSerializer
 

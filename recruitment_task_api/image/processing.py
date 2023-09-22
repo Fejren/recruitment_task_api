@@ -1,10 +1,8 @@
-from datetime import timedelta
-from django.utils import timezone
 from io import BytesIO
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from image.models import Image, ExpiringLink
+from image.models import Image
 from user.models import AccountTier
 from PIL import Image as ProcessImage
 
@@ -13,14 +11,6 @@ def image_width_calc(height: int, img) -> tuple:
     proportion = height / float(img.size[1])
     width = int(float(img.size[0]) * proportion)
     return width, height
-
-
-def generate_expiring_link(image_url: str, expire_time: int):
-    # Creating a link expiration date
-    expiration = timezone.now() + timedelta(seconds=expire_time)
-    link = ExpiringLink(image=image_url, expires_at=expiration)
-    link.save()
-    return link.id
 
 
 def process_image(image, account_tier: AccountTier, user_id: int):
