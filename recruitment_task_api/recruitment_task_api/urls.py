@@ -3,6 +3,9 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include
 
+admin.site.site_header = 'Admin Panel'
+admin.site.index_title = 'Recruitment task - Dawid Zaręba'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
