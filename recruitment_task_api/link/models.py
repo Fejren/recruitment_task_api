@@ -12,5 +12,8 @@ class ExpiringLink(models.Model):
     image = models.URLField()
     expires_at = models.DateTimeField()
 
+    class Meta:
+        ordering = ('-expires_at',)
+
     def __str__(self):
-        return f'Link expires at {self.expires_at}'
+        return f'Link expires at {self.expires_at.date()}'
