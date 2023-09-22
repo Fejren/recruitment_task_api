@@ -7,7 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/images/', include('image.urls')),
-    path('api/link/', include('link.urls')),
+    path('api/images/link/', include('link.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()
