@@ -7,7 +7,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./recruitment_task_api:/recruitment_task_api
-      - static-data:/vol/web
     ports:
       - "8000:8000"
     env_file:
@@ -19,6 +18,7 @@ services:
       - DB_PASS=${DB_PASS}
     command: >
       sh -c "python manage.py migrate &&
+             python manage.py loaddata dump.json
              python manage.py runserver 0.0.0.0:8000"
     depends_on:
         db:
@@ -47,4 +47,3 @@ services:
 volumes:
   db:
     driver: local
-  static-data:
