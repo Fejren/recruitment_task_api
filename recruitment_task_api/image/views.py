@@ -8,11 +8,13 @@ from .models import Image
 from user.models import User
 
 
-class ImageCreateViewSet(mixins.CreateModelMixin,
-                         mixins.RetrieveModelMixin,
-                         viewsets.GenericViewSet):
+class ImageViewSet(viewsets.GenericViewSet):
     queryset = Image.objects.none()
     serializer_class = ImageSerializer
+
+
+class ImageCreateViewSet(mixins.CreateModelMixin,
+                         ImageViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -64,3 +66,15 @@ class ImageCreateViewSet(mixins.CreateModelMixin,
                 )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ImageRetrieveViewSet(mixins.RetrieveModelMixin, ImageViewSet):
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            user = kwargs.get('user')
+            user = User.objects.get(id=user)
+            images = Image.objects.filter(user=user)
+            serializer = self.serializer_class(images, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception:
+            return Response({'message': 'Unable to fetch images'}, status=status.HTTP_400_BAD_REQUEST)
