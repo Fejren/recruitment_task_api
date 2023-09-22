@@ -11,3 +11,12 @@ def generate_expiring_link(image_url: str, expire_time: int):
     link = ExpiringLink(image=image_url, expires_at=expiration)
     link.save()
     return link.id
+
+
+def is_link_expired(expiring_link_model: ExpiringLink) -> bool:
+    # Check if link has expired
+    current_time = timezone.now()
+    if expiring_link_model.expires_at <= current_time:
+        return True
+    else:
+        return False
