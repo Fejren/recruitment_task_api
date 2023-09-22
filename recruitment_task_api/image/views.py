@@ -46,7 +46,7 @@ class ImageCreateViewSet(mixins.CreateModelMixin,
                         },
                         status=status.HTTP_201_CREATED
                     )
-                except Exception as e:
+                except Exception:
                     return Response(
                         {
                             'message': 'The image has been saved to the database',

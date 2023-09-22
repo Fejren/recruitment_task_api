@@ -2,4 +2,11 @@ from django.contrib import admin
 
 from .models import Image
 
-admin.site.register(Image)
+
+@admin.register(Image)
+class ImageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user_email']
+    search_fields = ['user__email']
+
+    def user_email(self, obj):
+        return obj.user.email
