@@ -1,7 +1,7 @@
 from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
 
-from .processing import process_image
+from .processing import process_image, generate_expiring_link
 from .serializers import ImageSerializer
 from .models import Image
 from user.models import User
@@ -30,13 +30,35 @@ class ImageCreateAndRetrieveViewSet(mixins.CreateModelMixin,
                     {'message': 'Your account tier has no size'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            file_names = process_image(image, account_tier, user.id)
-            return Response(
-                {
-                    'message': 'The image has been saved to the database',
-                    'links': file_names,
-                },
-                status=status.HTTP_201_CREATED
-            )
+            image_urls = process_image(image, account_tier, user.id)
+
+            if account_tier.has_expiring_link:
+                try:
+                    expire_time = serializer.validated_data['expire_time']
+                    expiring_link = generate_expiring_link(image_urls[0], expire_time)
+                    return Response(
+                        {
+                            'message': 'The image has been saved to the database',
+                            'links': image_urls,
+                            'expiring_link': expiring_link
+                        },
+                        status=status.HTTP_201_CREATED
+                    )
+                except Exception as e:
+                    return Response(
+                        {
+                            'message': 'The image has been saved to the database',
+                            'links': image_urls,
+                        },
+                        status=status.HTTP_201_CREATED
+                    )
+            else:
+                return Response(
+                    {
+                        'message': 'The image has been saved to the database',
+                        'links': image_urls,
+                    },
+                    status=status.HTTP_201_CREATED
+                )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
