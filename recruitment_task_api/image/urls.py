@@ -9,5 +9,5 @@ urlpatterns = [
          name='image-create'),
 
     path('<uuid:user>', ImageRetrieveViewSet.as_view({'get': 'retrieve'}),
-         name='image-create'),
+         name='image-retrieve'),
 ]

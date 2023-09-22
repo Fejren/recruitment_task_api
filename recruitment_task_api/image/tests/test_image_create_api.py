@@ -1,12 +1,8 @@
-import base64
 import os
-from io import BytesIO
-
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
-from PIL import Image as ProcessImage
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 
@@ -40,13 +36,6 @@ class ImageCreateAndRetrieveViewSetTestCase(TestCase):
             content=open(f'{self.image_path}', 'rb').read(),
             content_type='image/jpeg'
         )
-
-    # def test_create_image(self):
-    #     response = self.client.post('/api/images/', {
-    #         'content': self.image,
-    #         'user': self.user.id
-    #     }, format='multipart')
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_image_invalid_format(self):
         invalid_image_path = os.path.join(os.path.dirname(__file__), 'test_image.jpg')
