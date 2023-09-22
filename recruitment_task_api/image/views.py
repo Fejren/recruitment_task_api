@@ -37,6 +37,7 @@ class ImageCreateViewSet(mixins.CreateModelMixin,
                 try:
                     expire_time = serializer.validated_data['expire_time']
                     expiring_link = generate_expiring_link(image_urls[0], expire_time)
+                    expiring_link = f'http://localhost:8000/api/images/link/{expiring_link}'
                     return Response(
                         {
                             'message': 'The image has been saved to the database',
