@@ -1,8 +1,8 @@
 from django.urls import path
 
-from .views import ImageCreateAndRetrieveViewSet
+from .views import ImageCreateViewSet
 
 
 urlpatterns = [
-    path('', ImageCreateAndRetrieveViewSet.as_view({'post': 'create'}), name='image-create-retrieve'),
+    path('', ImageCreateViewSet.as_view({'post': 'create'}), name='image-create'),
 ]

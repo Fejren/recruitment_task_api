@@ -15,6 +15,11 @@ def validate_format(content):
 
 class ImageSerializer(serializers.ModelSerializer):
     content = serializers.ImageField(validators=[validate_format])
+    expire_time = serializers.IntegerField(
+        min_value=30,
+        max_value=30000,
+        required=False
+    )
 
     class Meta:
         model = Image
