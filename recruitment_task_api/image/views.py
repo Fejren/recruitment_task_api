@@ -73,7 +73,7 @@ class ImageCreateViewSet(mixins.CreateModelMixin,
 class ImageRetrieveViewSet(mixins.RetrieveModelMixin, ImageViewSet):
     def retrieve(self, request, *args, **kwargs):
         try:
-            user = kwargs.get('user')
+            user = kwargs.get('user')  # Get user id from the url
             user = User.objects.get(id=user)
             images = Image.objects.filter(user=user)
             serializer = self.serializer_class(images, many=True)
