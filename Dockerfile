@@ -18,5 +18,6 @@ RUN pip install -r requirements.txt --no-cache-dir
 RUN adduser -D user
 
 RUN chown -R user:user /recruitment_task_api/static/images/
+RUN chmod -R 755 /recruitment_task_api/static/images
 
 USER user
