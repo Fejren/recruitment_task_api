@@ -13,8 +13,6 @@ from user.models import AccountTier
 
 CREATE_IMAGE_URL = reverse('image:image-create')
 
-os.chmod('test_image.jpg', 755)
-
 
 def retrieve_image_url(user_id):
     return reverse('image:image-retrieve', args=[user_id])

@@ -12,9 +12,6 @@ from user.models import AccountTier, UserProfile
 
 CREATE_IMAGE_URL = reverse('image:image-create')
 
-os.chmod('test_image.jpg', 755)
-os.chmod('test_invalid_image.gif', 755)
-
 
 def create_user_profile(user_id, account_tier_id):
     UserProfile(
