@@ -9,12 +9,11 @@ RUN apk add --update --no-cache --virtual .tmp-build-deps \
     musl-dev zlib zlib-dev
 
 RUN mkdir /recruitment_task_api
-RUN mkdir /recruitment_task_api/static/images
 WORKDIR /recruitment_task_api
 COPY ./recruitment_task_api /recruitment_task_api
 
 RUN pip install -r requirements.txt --no-cache-dir
-
+RUN mkdir /static/images
 ## Media dir
 RUN adduser -D user
 
