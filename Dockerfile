@@ -15,10 +15,8 @@ COPY ./recruitment_task_api /recruitment_task_api
 RUN pip install -r requirements.txt --no-cache-dir
 
 ## Media dir
-RUN mkdir -p /vol/web/media
-RUN mkdir -p /vol/web/static
 RUN adduser -D user
-RUN chown -R user:user /vol/
-RUN chmod -R 755 /vol
+RUN chown -R user:user /static
+RUN chmod -R 755 /static/images
 
 USER user
