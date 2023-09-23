@@ -111,7 +111,7 @@ class ImageCreateAndRetrieveViewSetTestCase(TestCase):
         response = self.client.post(CREATE_IMAGE_URL, {
             'content': self.image,
             'user': self.user.id,
-            'expire_time': 30
+            'expire_time': 300
         }, format='multipart')
         content = json.loads(response.content)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
