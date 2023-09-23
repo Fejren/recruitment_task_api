@@ -9,8 +9,8 @@ class ExpiringLink(models.Model):
         default=uuid.uuid4,
         editable=False
     )
-    image = models.URLField()
-    expires_at = models.DateTimeField()
+    image = models.URLField(db_index=True)
+    expires_at = models.DateTimeField(db_index=True)
 
     class Meta:
         ordering = ('-expires_at',)
