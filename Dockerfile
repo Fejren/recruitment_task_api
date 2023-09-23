@@ -17,4 +17,6 @@ RUN pip install -r requirements.txt --no-cache-dir
 ## Media dir
 RUN adduser -D user
 
+RUN chown -R user:user /recruitment_task_api/static/images/
+
 USER user
