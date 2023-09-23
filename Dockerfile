@@ -13,11 +13,7 @@ WORKDIR /recruitment_task_api
 COPY ./recruitment_task_api /recruitment_task_api
 
 RUN pip install -r requirements.txt --no-cache-dir
-RUN mkdir /static/images
-## Media dir
-RUN adduser -D user
 
-#RUN chown -R user:user /recruitment_task_api/static/images/
-#RUN chmod -R 755 /recruitment_task_api/static/images
+RUN adduser -D user
 
 USER user
