@@ -1,6 +1,7 @@
 FROM python:3.10-alpine
 
 ENV PYTHONUNBUFFERED 1
+RUN pip install --upgrade pip
 
 ## Install dependencies
 RUN apk add --update --no-cache postgresql-client jpeg-dev
@@ -13,7 +14,3 @@ WORKDIR /recruitment_task_api
 COPY ./recruitment_task_api /recruitment_task_api
 
 RUN pip install -r requirements.txt --no-cache-dir
-
-RUN adduser -D user
-
-USER user
