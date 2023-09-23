@@ -16,10 +16,11 @@ class ExpiringLinkViewSet(mixins.CreateModelMixin,
     serializer_class = ExpiringLinkSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        link_id = kwargs.get('id')
+        link_id = kwargs.get('id')  # Get link id from the url
         expiring_link_model = get_object_or_404(ExpiringLink, id=link_id)
         if is_link_expired(expiring_link_model):
             return Response({'message': 'Link expired'},
                             status=status.HTTP_400_BAD_REQUEST)
         else:
+            # Redirect to image
             return HttpResponseRedirect(redirect_to=expiring_link_model.image)

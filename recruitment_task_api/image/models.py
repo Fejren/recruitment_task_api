@@ -3,11 +3,13 @@ from django.db import models
 
 
 class Image(models.Model):
-    content = models.ImageField(upload_to='static/images/')
+    content = models.ImageField(upload_to='static/images/',
+                                db_index=True)
     user = models.ForeignKey(
         get_user_model(),
         related_name='user_images',
-        on_delete=models.CASCADE, db_index=True
+        on_delete=models.CASCADE,
+        db_index=True
     )
 
     class Meta:

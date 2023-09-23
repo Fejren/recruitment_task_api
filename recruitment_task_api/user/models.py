@@ -40,8 +40,11 @@ class UserManager(BaseUserManager):
 
 # Account tier model
 class AccountTier(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    size = ArrayField(models.IntegerField())  # Custom size of thumbnail height
+    name = models.CharField(max_length=100,
+                            unique=True,
+                            db_index=True)
+    size = ArrayField(models.IntegerField(),
+                      db_index=True)  # Custom size of thumbnail height
     has_original = models.BooleanField(
         default=False,
         verbose_name="has access to original image"
