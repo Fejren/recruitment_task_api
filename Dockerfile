@@ -16,6 +16,5 @@ RUN pip install -r requirements.txt --no-cache-dir
 
 ## Media dir
 RUN adduser -D user
-RUN chmod -R 755 /static/images
 
 USER user
